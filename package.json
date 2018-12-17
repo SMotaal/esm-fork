@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "author": "Saleh Abdel Motaal <smotaal@grasppe.com>",
+  "description": "Project recipes to test ESM implementations",
+  "repository": "https://github.com/all-things-esm/esm.git",
+  "scripts": {
+    "node-esm": "./node-esm"
+  },
+  "devDependencies": {
+    "prettier": "*"
+  },
+  "workspaces": ["common"]
+}

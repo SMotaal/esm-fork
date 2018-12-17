@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "exports": {
+    "./esm-loader.mjs": "./esm-loader.mjs"
+  }
+}

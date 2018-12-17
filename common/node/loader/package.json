@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "exports": {
+    "./esm-resolver.mjs": "./esm-resolver.mjs"
+  }
+}
