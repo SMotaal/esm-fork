@@ -1,0 +1,11 @@
+{
+  "name": "esm",
+  "exports": {},
+  "scripts": {
+    "install": "exit 1;"
+  },
+  "dependencies": {
+    "mjs": "*",
+    "esm": "*"
+  }
+}

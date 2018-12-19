@@ -1,0 +1,11 @@
+{
+  "name": "mjs",
+  "main": "index.mjs",
+  "scripts": {
+    "install": "exit 1;"
+  },
+  "dependencies": {
+    "mjs": "*",
+    "esm": "*"
+  }
+}
