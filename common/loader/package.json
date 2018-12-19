@@ -1,9 +1,4 @@
 {
   "private": true,
-  "exports": {
-    "./helpers": "./helpers.js",
-    "./package-records": "./package-records.js",
-    "./packages": "./packages.js",
-    "./resolver": "./resolver.js"
-  }
+  "exports": {}
 }

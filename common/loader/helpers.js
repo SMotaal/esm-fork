@@ -1,14 +1,7 @@
 /// Errors
-
-export class SpecifierError extends URIError {}
-export class PackageNameError extends URIError {}
-export class PackageConfigurationError extends EvalError {}
-export class LocationError extends ReferenceError {}
-export class FormatError extends TypeError {}
-export class ExtensionError extends TypeError {}
+export * from './errors.js';
 
 /// Serialization
-
 /**
  * Ensures source parses to an object which is not an array
  *
@@ -49,7 +42,7 @@ export function validURLFrom(specifier, referrer) {
   };
   return (validURLFrom = (specifier, referrer) => {
     if (specifier) {
-      const type = specifier && typeof specifier;
+      const type = (specifier === null && 'null') || typeof specifier;
       const href = `${specifier}`;
       if (referrer && /^\.{1,2}\//.test(href)) {
         try {
@@ -100,13 +93,3 @@ export async function readFromURL(url, options = {'no-referrer': true}) {
     return `${(await import('fs')).readFileSync(url)}`;
   }
 }
-
-// try {
-//   if (specifier) {
-//     if (referrer) return new URL(specifier, new URL(referrer));
-//     return new URL(specifier);
-//   }
-//   // return referrer ? new URL(specifier, referrer) : new URL(specifier);
-// } catch (exception) {
-//   console.log('validURLFrom(%O, %O) => ', specifier, referrer, exception);
-// }

@@ -19,11 +19,11 @@ const resolver = new class Resolver {
     let resolved, url, format, trace;
     try {
       const {initialized = (this.initialized = this.initialize())} = this;
-      if (!referrer || specifier[0] !== '.') {
-        trace = (referrer && 'bare') || 'main';
-        return (resolved = resolve(specifier, referrer));
-      }
-      if (Scoped(referrer)) {
+      // if (!referrer || specifier[0] !== '.') {
+      //   trace = (referrer && 'bare') || 'main';
+      //   return (resolved = resolve(specifier, referrer));
+      // }
+      if (referrer && Scoped(referrer)) {
         trace = 'scoped';
         ({url, format} = resolved = await resolve(specifier, referrer));
         Scoped(url) && format === 'cjs' && (resolved.format = 'esm');
@@ -88,7 +88,7 @@ const resolver = new class Resolver {
 
 export const resolve = (...args) => resolver.resolve(...args);
 
-const Trace = (context, type, details) => void console.log(`\n<%s %s> %o\n`, context, type, details);
+const Trace = (type, details) => void console.log(`\n<%s> %o\n`, type, details);
 
 // console.log({specifier, referrer, isMain, resolved});
 // if (resolved.format === 'esm') return resolved;

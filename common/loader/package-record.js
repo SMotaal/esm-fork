@@ -1,4 +1,5 @@
 import {parsedObjectFrom} from './helpers.js';
+import {SourceRecord} from './source-record.js';
 
 const ExportsTypes = ['undefined', 'string', 'object'];
 const MainTypes = ['undefined', 'string'];
@@ -11,11 +12,13 @@ const MainTypes = ['undefined', 'string'];
  * @export
  * @class PackageRecord
  */
-export class PackageRecord {
+export class PackageRecord extends SourceRecord {
   /** @param {Partial<PackageRecord>} [record] */
   constructor(record) {
     let exists, isValid, hasMain, isESM, main, exports;
     record && ({exists, isValid, hasMain, isESM, main, exports} = record);
+    // TODO: Validate values before calling super
+    super();
     /** @type {boolean} */
     this.exists = exists;
     /** @type {boolean} */
@@ -41,7 +44,7 @@ export class PackageRecord {
    */
   static fromSource(source) {
     let // Empty source returns { exists: false, isValid: true }
-      exists = !!source,
+      exists = source === '' || !!source,
       isValid = !exists,
       hasMain = false,
       isESM = false,
