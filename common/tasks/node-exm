@@ -1,0 +1,1 @@
+node --no-warnings --experimental-modules --loader @esm/common/node/loader/legacy "$@"

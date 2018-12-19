@@ -3,5 +3,9 @@
   "name": "@esm/common",
   "version": "0.0.0",
   "author": "Saleh Abdel Motaal <smotaal@grasppe.com>",
-  "exports": {}
+  "exports": {},
+  "bin": {
+    "nes": "tasks/node-esm",
+    "nex": "tasks/node-exm"
+  }
 }

@@ -4,10 +4,12 @@
   "description": "Project recipes to test ESM implementations",
   "repository": "https://github.com/all-things-esm/esm.git",
   "scripts": {
-    "node-esm": "./node-esm"
+    "xnes": "./nes",
+    "xnex": "./nex"
   },
   "devDependencies": {
-    "prettier": "*"
+    "prettier": "*",
+    "@esm/common": "*"
   },
   "workspaces": ["common"]
 }
