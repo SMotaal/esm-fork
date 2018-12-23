@@ -2,9 +2,11 @@ import {Resolver} from '../../loader/resolver.js';
 import {Packages} from '../../loader/packages.js';
 import {SpecifierError, PackageNameError, LocationError, ExtensionError, validURLFrom} from '../../loader/helpers.js';
 
-const Messages = {
-  InvalidExports: `invalid package exports type`,
-};
+let DEBUG;
+
+const Defaults = {format: 'legacy'};
+const Formats = {ESM: 'esm', Legacy: 'legacy'};
+const Messages = {InvalidExports: `invalid package exports type`};
 
 export class ESMResolver extends Resolver {
   emitWarning(type, scope, message = Messages[type]) {
@@ -186,6 +188,7 @@ export class ESMResolver extends Resolver {
   }
 
   async resolveFormat(resolvedURL, isMain) {
+    // const DEBUG = true;
     const {packages, packagePrefix = '/node_modules/', extensions} = this;
     const url = validURLFrom(resolvedURL);
     const pathname = ((url && url.pathname) || '').trim();
@@ -201,31 +204,43 @@ export class ESMResolver extends Resolver {
         .trim()
         .toLowerCase() || '';
 
-    for (const parentURL of this.parentsFrom(resolvedURL)) {
-      const packageRecord = await packages.getRecordFrom(parentURL);
-      // TODO: Handle unexpected or missing record
-      if (!packageRecord) break;
+    resolvedURL = `${resolvedURL}`;
+    const parents = DEBUG ? [...this.parentsFrom(resolvedURL)] : this.parentsFrom(resolvedURL);
+    DEBUG && (parents.seen = {});
 
-      const {exists, isValid, isESM} = packageRecord;
+    try {
+      for (const parentURL of parents) {
+        const packageRecord = await packages.getRecordFrom(parentURL);
+        // TODO: Handle unexpected or missing record
+        if (!packageRecord) {
+          console.warn(`Failed to get package record from "${parentURL}"`);
+          continue;
+        }
 
-      if (!exists || !isValid) continue;
+        const {exists, isValid, isESM, format = isESM ? 'ESM' : 'Legacy'} = packageRecord;
 
-      if (isESM) {
-        if (extension !== '.js' && extension !== '.mjs')
+        DEBUG && (parents.seen = {...parents.seen, [parentURL]: packageRecord});
+
+        if (!exists || !isValid) continue;
+
+        if (
+          isESM ? extension !== '.js' && extension !== '.mjs' : extension === '.mjs' || !extensions.includes(extension)
+        )
           throw new ExtensionError(
-            `"${resolvedURL}" is inside an  ESM package boundary and uses an unsupported extension`,
+            `"${resolvedURL}" is inside an ${format} package boundary and uses an unsupported extension ("${extension ||
+              'no extension'}")`,
           );
-        return 'esm';
-      }
 
-      if (extension === '.mjs' || !extensions.includes(extension)) {
-        throw new ExtensionError(
-          `"${resolvedURL}" is inside a Legacy package boundary and uses an unsupported extension`,
-        );
+        return Formats[format] || Defaults.format;
       }
-
-      return 'legacy';
+    } finally {
+      if (DEBUG && parents.seen) {
+        console.group(`resolveFormat(%O,, %O)`, resolvedURL, isMain);
+        for (const parent of parents) console.log(` %s  %O => %o`, '\u{26AB}', parent, parents.seen[parent]);
+        console.groupEnd();
+      }
     }
+    return Defaults.format;
   }
 
   *parentsFrom(url) {

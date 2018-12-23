@@ -1,8 +1,8 @@
 import {parsedObjectFrom} from './helpers.js';
 import {SourceRecord} from './source-record.js';
 
-const ExportsTypes = ['undefined', 'string', 'object'];
-const MainTypes = ['undefined', 'string'];
+const ExportsTypes = Object.freeze(['undefined', 'string', 'object']);
+const MainTypes = Object.freeze(['undefined', 'string']);
 
 /**
  * Loader-specific record for a package.
@@ -44,8 +44,8 @@ export class PackageRecord extends SourceRecord {
    */
   static fromSource(source) {
     let // Empty source returns { exists: false, isValid: true }
-      exists = source === '' || !!source,
-      isValid = !exists,
+      exists = source !== undefined,
+      isValid = exists || source === undefined, // !exists
       hasMain = false,
       isESM = false,
       main = '',
@@ -75,6 +75,8 @@ export class PackageRecord extends SourceRecord {
       }
     }
 
-    return new PackageRecord({exists: true, isValid, hasMain, isESM, main, exports});
+    return new PackageRecord({exists, isValid, hasMain, isESM, main, exports});
+  }
+
   }
 }

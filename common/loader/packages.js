@@ -1,6 +1,8 @@
 import {PackageRecord} from './package-record.js';
 import {entryURLFrom, readFromURL} from './helpers.js';
 
+const SourceTypes = Object.freeze(['string', 'object']);
+
 /**
  * Package records for loaders
  *
@@ -67,18 +69,18 @@ export class Packages {
   async createEntryFromURL(packageURL) {
     let record, error, url, source;
     try {
-      source = await this.readPackageFromURL(packageURL);
-      if (source && typeof source === 'object') {
-        source = `${typeof source.text === 'function' ? (await source.text()) || '' : source}`;
-      } else if (typeof source !== 'string') {
-        source = undefined;
-      }
-      record = PackageRecord.fromSource(source);
+      (source = await this.readPackageFromURL(packageURL)) && typeof source === 'object'
+        ? `${typeof source.text === 'function' ? (await source.text()) || '' : source}`
+        : typeof source === 'string' || (source = undefined);
     } catch (exception) {
-      // TODO: Ensure errors conform to current implementation
       error = exception;
     }
+    record = PackageRecord.fromSource(source);
+    // !error || console.warn(`createEntryFromURL(%O) => %O`, packageURL && `${packageURL}`, error);
     return {record, error, url, source};
+    // const entry = {record, error, url, source};
+    // console.log();
+    // return entry;
   }
 
   /**
