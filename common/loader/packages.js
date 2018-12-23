@@ -2,7 +2,7 @@ import {PackageRecord} from './package-record.js';
 import {entryURLFrom, readFromURL} from './helpers.js';
 
 /**
- * Packages for loaders.
+ * Package records for loaders
  *
  * @typedef {{record?: PackageRecord, url?: string, source?, error?}} Entry
  *
@@ -11,14 +11,14 @@ import {entryURLFrom, readFromURL} from './helpers.js';
  */
 export class Packages {
   /**
-   * Creates an instance of Packages for a specific resolver.
+   * Creates an instance of Packages for a specific resolver
    *
    * @param {Entry} resolver
    * @memberof Packages
    */
   constructor(resolver) {
     /**
-     * Cache-backed URL-keyed PackageRecord map.
+     * Cache-backed URL-keyed PackageRecord map
      *
      * @type {Map<string, Entry>}
      */
@@ -27,7 +27,7 @@ export class Packages {
   }
 
   /**
-   * Returns the PackageRecord instance for the normalized URL.
+   * Returns the PackageRecord instance for the normalized URL
    *
    * @param {URL | string} url
    * @memberof Packages
@@ -55,7 +55,10 @@ export class Packages {
   }
 
   /**
-   * Returns a PackageRecord along with its metadata.
+   * Returns a PackageRecord along with its metadata
+   *
+   *  TODO: [critical]
+   * @todo Ensure entry.error is handled per specs
    *
    * @param {URL} packageURL - Normalized URL for the package source
    * @returns {Entry}
@@ -79,7 +82,7 @@ export class Packages {
   }
 
   /**
-   * Returns the source text from package URL.
+   * Returns the source text from package URL
    *
    * @param {URL} packageURL - Normalized URL for the package source
    * @returns {string}
@@ -90,7 +93,7 @@ export class Packages {
   }
 
   /**
-   * Normalizes or constructs a normalized URL object for a package entry.
+   * Normalizes or constructs a normalized URL object for a package entry
    *
    * @static
    * @param {string | URL} url
