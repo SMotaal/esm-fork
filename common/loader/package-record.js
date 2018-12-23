@@ -78,5 +78,15 @@ export class PackageRecord extends SourceRecord {
     return new PackageRecord({exists, isValid, hasMain, isESM, main, exports});
   }
 
+  [Symbol.for('nodejs.util.inspect.custom')](depth, {stylize = String} = {}) {
+    let string = '';
+    for (const [key, value] of Object.entries(this)) {
+      if (!value && value !== '') continue;
+      string +=
+        value === true
+          ? ` <${stylize(key, 'name')}>`
+          : ` ${stylize(key, 'name')}: ${stylize(JSON.stringify(value), typeof value)}`;
+    }
+    return `PackageRecord {${string} }`;
   }
 }
