@@ -1,9 +1,6 @@
 import {existsSync, readFileSync} from 'fs';
 import {builtinModules} from 'module';
-import process, {cwd, argv} from 'process';
-
-// console.time('node-loader-legacy');
-// process.on('exit', () => console.timeEnd('node-loader-legacy'));
+import {cwd, argv} from 'process';
 
 const ROOT = `file://`;
 const SCOPE = `${new URL('../../../../', import.meta.url)}`;
@@ -17,22 +14,18 @@ const Scoped = url =>
 const resolver = new class Resolver {
   async resolve(specifier, referrer, resolve) {
     let resolved, url, format, trace;
-    try {
-      const {initialized = (this.initialized = this.initialize())} = this;
-      if (referrer && Scoped(referrer)) {
-        trace = 'scoped';
-        ({url, format} = resolved = await resolve(specifier, referrer));
-        Scoped(url) && format === 'cjs' && (resolved.format = 'esm');
-        return resolved;
-      }
-      if (initialized && initialized.then) {
-        trace = 'deferred';
-        return (resolved = await (await initialized)(specifier, referrer, resolve));
-      }
-      return this.resolver(specifier, referrer, resolve);
-    } finally {
-      // trace && Trace(trace, {specifier, referrer, ...resolved});
+    const {initialized = (this.initialized = this.initialize())} = this;
+    if (referrer && Scoped(referrer)) {
+      trace = 'scoped';
+      ({url, format} = resolved = await resolve(specifier, referrer));
+      Scoped(url) && format === 'cjs' && (resolved.format = 'esm');
+      return resolved;
     }
+    if (initialized && initialized.then) {
+      trace = 'deferred';
+      return (resolved = await (await initialized)(specifier, referrer, resolve));
+    }
+    return this.resolver(specifier, referrer, resolve);
   }
 
   async initialize() {
@@ -56,19 +49,15 @@ const resolver = new class Resolver {
 
       async resolve(specifier, referrer = this.base, resolve) {
         let resolved, url, format, isMain, trace;
-        try {
-          main || specifier !== mainArgv || (specifier = main = specifier.replace(/^\//, `${ROOT}/`));
-          isMain = specifier === main;
+        main || specifier !== mainArgv || (specifier = main = specifier.replace(/^\//, `${ROOT}/`));
+        isMain = specifier === main;
 
-          ({url, format} = resolved = await this.resolveSpecifier(specifier, referrer, isMain));
-          (!isMain && (format === 'builtin' && ({url, format} = resolved = resolve(specifier)))) ||
-            (resolved.url = `${url}`);
-          isMain && (resolved.main = true);
-          trace = (resolved && (format || 'unknown')) || 'unresolved';
-          return resolved;
-        } finally {
-          // trace && Trace(trace, {specifier, referrer, ...resolved});
-        }
+        ({url, format} = resolved = await this.resolveSpecifier(specifier, referrer, isMain));
+        (!isMain && (format === 'builtin' && ({url, format} = resolved = resolve(specifier)))) ||
+          (resolved.url = `${url}`);
+        isMain && (resolved.main = true);
+        trace = (resolved && (format || 'unknown')) || 'unresolved';
+        return resolved;
       }
 
       async resolveIndex(location, extensions = this.extensions) {
@@ -81,12 +70,9 @@ const resolver = new class Resolver {
       extensions: ['.js', '.json', '.node', '.mjs'],
     }));
 
-    // this.resolve = resolver;
     this.initialized = true;
     return resolver;
   }
 }();
 
 export const resolve = (...args) => resolver.resolve(...args);
-
-const Trace = (type, details) => void console.log(`\n<%s> %o\n`, type, details);
