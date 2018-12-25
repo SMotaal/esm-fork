@@ -53,7 +53,8 @@ const resolver = new class Resolver {
         isMain = specifier === main;
 
         ({url, format} = resolved = await this.resolveSpecifier(specifier, referrer, isMain));
-        (!isMain && (format === 'builtin' && ({url, format} = resolved = resolve(specifier)))) ||
+        (!isMain &&
+          ((format === 'builtin' || format === 'legacy') && ({url, format} = resolved = resolve(specifier, referrer)))) ||
           (resolved.url = `${url}`);
         isMain && (resolved.main = true);
         trace = (resolved && (format || 'unknown')) || 'unresolved';
