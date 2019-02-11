@@ -31,7 +31,7 @@ export class PackageRecord extends SourceRecord {
     this.main = main;
     /** @type {{[name:string]: string} | string} */
     this.exports = exports;
-    Object.freeze(this);
+    // Object.freeze(this);
   }
 
   /**
@@ -79,6 +79,7 @@ export class PackageRecord extends SourceRecord {
   }
 
   [Symbol.for('nodejs.util.inspect.custom')](depth, {stylize = String} = {}) {
+    // try {
     let string = '';
     for (const [key, value] of Object.entries(this)) {
       if (!value && value !== '') continue;
@@ -88,5 +89,8 @@ export class PackageRecord extends SourceRecord {
           : ` ${stylize(key, 'name')}: ${stylize(JSON.stringify(value), typeof value)}`;
     }
     return `PackageRecord {${string} }`;
+    // } catch (exception) {
+    //   return this;
+    // }
   }
 }

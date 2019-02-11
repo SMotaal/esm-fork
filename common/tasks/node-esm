@@ -1,1 +1,1 @@
-~/Projects/@smotaal/node/node-esm/out/Release/node "$@"
+~/Projects/@smotaal/node/node-esm/node "$@"

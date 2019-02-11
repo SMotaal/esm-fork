@@ -5,7 +5,9 @@
   "author": "Saleh Abdel Motaal <smotaal@grasppe.com>",
   "exports": {},
   "bin": {
+    "specs": "tasks/specs.js",
     "nes": "tasks/node-esm",
+    "nes1": "tasks/node-esm-1",
     "nex": "tasks/node-exm"
   }
 }

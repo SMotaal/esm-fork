@@ -5,7 +5,8 @@
   "repository": "https://github.com/all-things-esm/esm.git",
   "scripts": {
     "xnes": "./nes",
-    "xnex": "./nex"
+    "xnex": "./nex",
+    "mjs": "node --experimental-modules"
   },
   "devDependencies": {
     "prettier": "*",

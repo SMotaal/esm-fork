@@ -16,7 +16,8 @@ const url = import.meta.url.replace(/.*\/boundary\//, '');
 })(
   // ...['esm/index.js', 'mjs/index.mjs'],
   // ...['../esm/index.js', '../mjs/index.mjs'],
-  ...['./esm/index.js', './mjs/index.mjs'],
+  // ...['./esm/index.js', './mjs/index.mjs'],
+  ...['./esm/esm/index.js', './mjs/mjs/index.mjs'],
 );
 
 export default url;

@@ -1,0 +1,1 @@
+I made a very early attempt to test irp boundary with nested symlinking and it works with `--preserve-symlink-main` I think. I need to take a stab at a better structure to test this so if anyone wants to see or give their insights please feel free to look at the commit for details: https://github.com/all-things-esm/esm/commit/56e06bc7d9ca453d1a9bb3527b296ce7003ed6a5
