@@ -3,10 +3,14 @@
   "author": "Saleh Abdel Motaal <smotaal@grasppe.com>",
   "description": "Project recipes to test ESM implementations",
   "repository": "https://github.com/all-things-esm/esm.git",
+  "version": "0.0.0-alpha.1",
   "scripts": {
     "xnes": "./nes",
     "xnex": "./nex",
     "mjs": "node --experimental-modules"
+  },
+  "bin": {
+    "nex": "common/tasks/node-exm"
   },
   "devDependencies": {
     "prettier": "*",
